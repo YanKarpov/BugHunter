@@ -2,6 +2,7 @@ from aiogram import types
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.fsm.context import FSMContext  
 from database.db import save_bug_report
+from aiogram import Dispatcher  # Импортируем Dispatcher
 
 async def send_welcome_message(message: types.Message):
     welcome_text = (
@@ -26,8 +27,25 @@ async def send_welcome_message(message: types.Message):
 async def handle_bug_report(description: str, selected_category_id: int, message: types.Message, state: FSMContext):
     if selected_category_id and description:
         await save_bug_report(selected_category_id, description)
-        await message.reply("Спасибо! Ваш отчет о проблеме успешно отправлен.")
+
+        new_problem_keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [
+                InlineKeyboardButton(text="Есть новая проблема", callback_data="new_problem"),
+            ],
+        ])
+
+        await message.reply(
+            "Спасибо! Ваш отчет о проблеме успешно отправлен.",
+            reply_markup=new_problem_keyboard
+        )
+        
         await state.clear()  
     else:
         await message.reply("Произошла ошибка. Пожалуйста, попробуйте снова.")
 
+async def process_new_problem(callback_query: types.CallbackQuery):
+    await callback_query.answer()  
+    await send_welcome_message(callback_query.message)  
+
+def register_handlers(dp: Dispatcher):
+    dp.register_callback_query_handler(process_new_problem, lambda c: c.data == "new_problem")
