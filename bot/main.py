@@ -1,7 +1,7 @@
 import asyncio
 from aiogram import Bot, Dispatcher
 from aiogram.fsm.storage.memory import MemoryStorage
-from bot.handlers.start_handler import router as start_router  
+from bot.handlers.bug_handler import router as start_router  
 from config import TELEGRAM_TOKEN
 
 bot = Bot(token=TELEGRAM_TOKEN)
