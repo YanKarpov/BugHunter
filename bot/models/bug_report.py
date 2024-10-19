@@ -1,10 +1,16 @@
-from datetime import datetime
+from sqlalchemy import Column, Integer, String, Text
+from database.db import Base
 
-class BugReport:
-    def __init__(self, category: str, description: str):
-        self.category = category
-        self.description = description
-        self.created_at = datetime.now()
+class ProblemCategory(Base):
+    __tablename__ = 'problem_categories'
+    
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, unique=True, index=True)
 
-    def __repr__(self):
-        return f"BugReport(category={self.category}, description={self.description}, created_at={self.created_at})"
+class BugReport(Base):
+    __tablename__ = 'bug_reports'
+    
+    id = Column(Integer, primary_key=True, index=True)
+    category_id = Column(Integer)
+    description = Column(Text)
+

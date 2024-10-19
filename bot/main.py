@@ -5,15 +5,13 @@ from bot.handlers.report_handler import register_report_handler
 from config import TELEGRAM_TOKEN
 
 bot = Bot(token=TELEGRAM_TOKEN)
-
 dp = Dispatcher()
 
-register_start_handler(dp, bot)
-register_report_handler(dp, bot)
+register_start_handler(dp)
+register_report_handler(dp)
 
 async def main():
-    await dp.start_polling(bot)  
+    await dp.start_polling(bot)
 
 if __name__ == '__main__':
     asyncio.run(main())
-
