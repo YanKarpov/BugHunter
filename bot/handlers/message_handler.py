@@ -2,7 +2,7 @@ from aiogram import types
 from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 from aiogram.fsm.context import FSMContext  
 from database.db import save_bug_report
-from aiogram import Dispatcher  # Импортируем Dispatcher
+from aiogram import Dispatcher
 
 async def send_welcome_message(message: types.Message):
     welcome_text = (
@@ -47,5 +47,12 @@ async def process_new_problem(callback_query: types.CallbackQuery):
     await callback_query.answer()  
     await send_welcome_message(callback_query.message)  
 
+async def unknown_command(message: types.Message):
+    await message.reply(
+        "Эта команда мне неизвестна. Используй /report, чтобы перейти к заполнению репорта о проблеме!"
+    )
+
 def register_handlers(dp: Dispatcher):
     dp.register_callback_query_handler(process_new_problem, lambda c: c.data == "new_problem")
+    
+    dp.register_message_handler(unknown_command, content_types=types.ContentType.TEXT, state=None)
