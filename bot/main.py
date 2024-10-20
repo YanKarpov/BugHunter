@@ -15,12 +15,12 @@ dp = Dispatcher(storage=storage)
 dp.include_router(start_router)
 
 async def main():
-    logger.info("Бот запущен и готов к работе!")
+    logger.info("Я запутился, со мной всё хорошо!")
     await dp.start_polling(bot)
 
 if __name__ == '__main__':
     try:
-        logger.info("Запуск бота...")
+        logger.info("Я включаюсь, дайте секунду...")
         asyncio.run(main())
     except Exception as e:
-        logger.error(f"Ошибка при запуске бота: {e}")
+        logger.error(f"Ой, кажется что-то не так...: {e}")
