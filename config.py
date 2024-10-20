@@ -14,4 +14,3 @@ DATABASE_URL = os.getenv('DATABASE_URL')
 
 if not TELEGRAM_TOKEN:
     raise ValueError(f"TELEGRAM_TOKEN is not set for {ENV} environment")
-
