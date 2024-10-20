@@ -1,9 +1,10 @@
-from dotenv import load_dotenv
 import os
 
-load_dotenv()
+if os.getenv('ENV') != 'production':
+    from dotenv import load_dotenv
+    load_dotenv()
 
-ENV = os.getenv('ENV', 'production')  
+ENV = os.getenv('ENV', 'production')
 
 if ENV == 'development':
     TELEGRAM_TOKEN = os.getenv('DEV_BOT_TOKEN')
