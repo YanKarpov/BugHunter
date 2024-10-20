@@ -54,18 +54,7 @@
       ```bash
       psql -U <username> -d <new_database_name> -f path/to/dump.sql
       ```
-
-   #### Для MySQL:
-   1. **Создайте новую базу данных:**
-      ```bash
-      mysql -u <username> -p -e "CREATE DATABASE <new_database_name>;"
-      ```
-
-   2. **Восстановите базу данных из дампа:**
-      ```bash
-      mysql -u <username> -p <new_database_name> < path/to/dump.sql
-      ```
-
+      
    #### Для SQLite:
    - Если вы используете SQLite, просто скопируйте файл базы данных `.db` в нужное место вашего проекта и укажите его в коде. Например, поместите его в папку `/database` вашего проекта и настройте путь к файлу в вашем приложении.
 
