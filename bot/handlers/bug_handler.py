@@ -20,6 +20,12 @@ category_mapping = {
 async def start_command(message: types.Message):
     await send_welcome_message(message)
 
+@router.callback_query(lambda c: c.data == "new_problem")
+async def process_new_problem(callback: types.CallbackQuery, state: FSMContext):
+    await callback.answer()
+    await send_welcome_message(callback.message)
+    await state.clear()
+    
 @router.callback_query()
 async def process_category_selection(callback: types.CallbackQuery, state: FSMContext):
     selected_category = category_mapping.get(callback.data)
@@ -29,13 +35,13 @@ async def process_category_selection(callback: types.CallbackQuery, state: FSMCo
         await callback.message.reply(
             f"Ты выбрал категорию <<{category_name}>>.\nТеперь опиши проблему (если ошибся с категорией, можешь вернуться к меню командой /report)."
         )
-        await state.update_data(selected_category=category_id)  
+        await state.update_data(selected_category=category_id)
         await state.set_state(Form.waiting_for_description)
 
 @router.message(Command('report'))
 async def report_command(message: types.Message, state: FSMContext):
-    await state.clear()  
-    await send_welcome_message(message) 
+    await state.clear()
+    await send_welcome_message(message)
 
 @router.message()
 async def process_description(message: types.Message, state: FSMContext):
