@@ -6,7 +6,7 @@ from aiogram.filters import CommandStart
 from dotenv import load_dotenv
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.context import FSMContext
-from handlers import send_welcome_message, handle_region_selection, handle_area_selection, handle_feedback, handle_back_to_regions  # Добавьте сюда ваш обработчик для кнопки "Назад"
+from handlers import send_welcome_message, handle_region_selection, handle_area_selection, handle_feedback, handle_back_to_regions  
 
 load_dotenv()
 
