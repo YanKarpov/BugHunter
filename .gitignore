@@ -1,8 +1,7 @@
-.env
+*.tmp
 
 venv/
-
-node_modules/
+env.
 
 __pycache__/
 *.pyc
@@ -10,4 +9,3 @@ __pycache__/
 *.pyd
 *.db
 *.sqlite3
-.DS_Store
