@@ -38,3 +38,7 @@ async def region_selection(callback: types.CallbackQuery):
 async def area_selection(callback: types.CallbackQuery):
     await handle_area_selection(callback)
 
+@dp.message(lambda message: message.text.startswith("/"))
+async def handle_c_message(message: types.Message):
+    await message.answer("Команда не распознана. Попробуйте другую.")
+
