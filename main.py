@@ -4,7 +4,7 @@ from fastapi import FastAPI
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart
 from dotenv import load_dotenv
-from handlers import send_welcome_message, handle_category_selection
+from handlers import send_welcome_message, handle_region_selection, handle_area_selection
 
 load_dotenv()
 
@@ -30,7 +30,11 @@ async def root():
 async def start_command(message: types.Message):
     await send_welcome_message(message)
 
-@dp.message()
-async def category_selection(message: types.Message):
-    await handle_category_selection(message)
+@dp.callback_query(lambda c: c.data.startswith("region_"))
+async def region_selection(callback: types.CallbackQuery):
+    await handle_region_selection(callback)
+
+@dp.callback_query(lambda c: c.data.startswith("area_"))
+async def area_selection(callback: types.CallbackQuery):
+    await handle_area_selection(callback)
 
