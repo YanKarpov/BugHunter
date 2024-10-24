@@ -6,7 +6,7 @@ from aiogram.filters import CommandStart
 from dotenv import load_dotenv
 from aiogram.fsm.storage.memory import MemoryStorage
 from aiogram.fsm.context import FSMContext
-from handlers import send_welcome_message, handle_region_selection, handle_area_selection, handle_feedback
+from handlers import send_welcome_message, handle_region_selection, handle_area_selection, handle_feedback, handle_back_to_regions  # Добавьте сюда ваш обработчик для кнопки "Назад"
 
 load_dotenv()
 
@@ -41,6 +41,9 @@ async def region_selection(callback: types.CallbackQuery, state: FSMContext):
 async def area_selection(callback: types.CallbackQuery, state: FSMContext):
     await handle_area_selection(callback, state)
 
+@dp.callback_query(lambda c: c.data == "back_to_regions")
+async def back_to_regions(callback: types.CallbackQuery, state: FSMContext):
+    await handle_back_to_regions(callback, state)  
 @dp.message(lambda message: message.text.startswith("/"))
 async def handle_c_message(message: types.Message):
     await message.answer("Команда не распознана. Попробуйте другую.")

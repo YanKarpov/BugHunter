@@ -28,7 +28,7 @@ async def send_welcome_message(message: types.Message):
 
 def create_region_keyboard():
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=value, callback_data=key)] for key, value in regions.items()  # Каждая кнопка в своем ряду
+        [InlineKeyboardButton(text=value, callback_data=key)] for key, value in regions.items()
     ])
 
 async def handle_region_selection(callback: types.CallbackQuery, state: FSMContext):
@@ -42,24 +42,39 @@ async def handle_region_selection(callback: types.CallbackQuery, state: FSMConte
     if available_areas:
         area_keyboard = create_area_keyboard(available_areas)
         await callback.message.answer(f"Вы выбрали: {region_name}. Выберите территорию:", reply_markup=area_keyboard)
-        await state.set_state(FormStates.waiting_for_area_selection)  # Установка состояния ожидания выбора территории
+        await state.set_state(FormStates.waiting_for_area_selection)
     else:
         await callback.message.answer(f"Вы выбрали: {region_name}. У этого района нет территорий.")
 
 def create_area_keyboard(available_areas):
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=area, callback_data=f"area_{area}")] for area in available_areas  # Каждая кнопка в своем ряду
-    ])
+        [InlineKeyboardButton(text=area, callback_data=f"area_{area}")] for area in available_areas
+    ] + [[InlineKeyboardButton(text="Назад", callback_data="back_to_regions")]])
 
 async def handle_area_selection(callback: types.CallbackQuery, state: FSMContext):
-    selected_area = callback.data.split("_", 1)[1]
-    await callback.answer()
-    await callback.message.answer(f"Вы выбрали территорию: {selected_area}. Чем я могу помочь?")
+    if callback.data == "back_to_regions":
+        await handle_back_to_regions(callback, state)  # Обработка нажатия кнопки "Назад"
+    else:
+        selected_area = callback.data.split("_", 1)[1]
+        await callback.answer()
+        await callback.message.answer(f"Вы выбрали территорию: {selected_area}. Чем я могу помочь?")
+        await state.set_state(FormStates.waiting_for_feedback)
 
-    await state.set_state(FormStates.waiting_for_feedback)  
+async def handle_back_to_regions(callback: types.CallbackQuery, state: FSMContext):
+    await callback.answer()
+    await send_welcome_message(callback.message)  # Отправляем приветственное сообщение заново
+
+from aiogram.types import InlineKeyboardButton, InlineKeyboardMarkup
 
 async def handle_feedback(message: types.Message, state: FSMContext):
     if await state.get_state() == FormStates.waiting_for_feedback:
         user_feedback = message.text
-        await message.answer(f"Спасибо за ваше предложение передали в поддержку!")
-        await state.clear()  
+
+        keyboard = InlineKeyboardMarkup(inline_keyboard=[
+            [InlineKeyboardButton(text="Дополнить сообщение", callback_data="back_to_regions")]
+        ])
+
+        await message.answer(f"Спасибо за ваше предложение, передали в поддержку!", reply_markup=keyboard)
+        await state.clear()
+
+
