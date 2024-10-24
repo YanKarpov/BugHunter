@@ -28,7 +28,7 @@ async def send_welcome_message(message: types.Message):
 
 def create_region_keyboard():
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=value, callback_data=key) for key, value in regions.items()]
+        [InlineKeyboardButton(text=value, callback_data=key)] for key, value in regions.items()  # Каждая кнопка в своем ряду
     ])
 
 async def handle_region_selection(callback: types.CallbackQuery, state: FSMContext):
@@ -48,7 +48,7 @@ async def handle_region_selection(callback: types.CallbackQuery, state: FSMConte
 
 def create_area_keyboard(available_areas):
     return InlineKeyboardMarkup(inline_keyboard=[
-        [InlineKeyboardButton(text=area, callback_data=f"area_{area}") for area in available_areas]
+        [InlineKeyboardButton(text=area, callback_data=f"area_{area}")] for area in available_areas  # Каждая кнопка в своем ряду
     ])
 
 async def handle_area_selection(callback: types.CallbackQuery, state: FSMContext):
