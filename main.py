@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import CommandStart
 from dotenv import load_dotenv
+from handlers import send_welcome_message, handle_category_selection
 
 load_dotenv()
 
@@ -16,18 +17,20 @@ if not TELEGRAM_TOKEN:
 bot = Bot(token=TELEGRAM_TOKEN)
 dp = Dispatcher()
 
-@dp.message(CommandStart())
-async def start_command(message: types.Message):
-    await message.answer("Привет! Я бот, который готов помочь!")
-
-async def on_startup():
-    await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot)
-
 @app.on_event("startup")
 async def startup():
-    asyncio.create_task(on_startup())
+    await bot.delete_webhook(drop_pending_updates=True)
+    asyncio.create_task(dp.start_polling(bot))
 
 @app.get("/")
 async def root():
     return {"message": "Ура, я работаю!!!"}
+
+@dp.message(CommandStart())
+async def start_command(message: types.Message):
+    await send_welcome_message(message)
+
+@dp.message()
+async def category_selection(message: types.Message):
+    await handle_category_selection(message)
+
